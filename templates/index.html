@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta
+    name="description"
+    content="RegTech Copilot — rule-based financial transaction monitoring and compliance dashboard"
+  >
+
+  <title>RegTech Copilot | Transaction Monitoring</title>
+
+  <link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='css/style.css') }}"
+  >
+</head>
+
+<body>
+
+  <!-- =====================================================
+       HEADER
+       ===================================================== -->
+
+  <header class="app-header">
+
+    <div class="header-content">
+
+      <div class="brand">
+
+        <div class="brand-icon">
+          <span>R</span>
+        </div>
+
+        <div>
+          <div class="brand-title">
+            RegTech <span>Copilot</span>
+          </div>
+
+          <div class="brand-subtitle">
+            Transaction Monitoring &amp; Compliance Intelligence
+          </div>
+        </div>
+
+      </div>
+
+
+      <div class="system-status">
+
+        <span class="status-dot"></span>
+
+        <span>Monitoring System</span>
+
+        <span class="status-live">
+          LIVE
+        </span>
+
+      </div>
+
+    </div>
+
+
+    <div class="header-line"></div>
+
+  </header>
+
+
+  <!-- =====================================================
+       MAIN APPLICATION
+       ===================================================== -->
+
+  <main class="dashboard">
+
+
+    <!-- ===================================================
+         PAGE INTRO
+         =================================================== -->
+
+    <section class="hero">
+
+      <div class="hero-content">
+
+        <div class="hero-tag">
+          <span class="hero-tag-dot"></span>
+          FINANCIAL COMPLIANCE PLATFORM
+        </div>
+
+        <h1>
+          Monitor transactions.
+          <span>Detect suspicious activity.</span>
+        </h1>
+
+        <p>
+          Analyze financial transactions using configurable
+          rule-based monitoring and identify potentially
+          suspicious activity in real time.
+        </p>
+
+      </div>
+
+
+      <div class="hero-decoration">
+
+        <div class="orbit orbit-one"></div>
+        <div class="orbit orbit-two"></div>
+
+        <div class="hero-core">
+          <span>RT</span>
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ===================================================
+         NOTICE
+         =================================================== -->
+
+    <div
+      id="notice"
+      class="notice"
+      hidden
+      role="status"
+      aria-live="polite"
+    ></div>
+
+
+    <!-- ===================================================
+         KPI CARDS
+         =================================================== -->
+
+    <section
+      class="cards"
+      aria-label="Transaction monitoring statistics"
+    >
+
+      <article class="card stat-card">
+
+        <div class="stat-top">
+          <span class="stat-label">
+            Total Transactions
+          </span>
+
+          <span class="stat-icon blue">
+            ↗
+          </span>
+        </div>
+
+        <span
+          id="totalTransactions"
+          class="stat-value"
+        >
+          -
+        </span>
+
+        <div class="stat-footer">
+          Transactions monitored
+        </div>
+
+      </article>
+
+
+      <article class="card stat-card">
+
+        <div class="stat-top">
+          <span class="stat-label">
+            Flagged Activity
+          </span>
+
+          <span class="stat-icon orange">
+            !
+          </span>
+        </div>
+
+        <span
+          id="flaggedTransactions"
+          class="stat-value"
+        >
+          -
+        </span>
+
+        <div class="stat-footer">
+          Potentially suspicious
+        </div>
+
+      </article>
+
+
+      <article class="card stat-card high">
+
+        <div class="stat-top">
+          <span class="stat-label">
+            High Risk
+          </span>
+
+          <span class="stat-icon red">
+            ⚠
+          </span>
+        </div>
+
+        <span
+          id="highCount"
+          class="stat-value"
+        >
+          -
+        </span>
+
+        <div class="stat-footer">
+          Requires attention
+        </div>
+
+      </article>
+
+
+      <article class="card stat-card medium">
+
+        <div class="stat-top">
+          <span class="stat-label">
+            Medium Risk
+          </span>
+
+          <span class="stat-icon yellow">
+            ●
+          </span>
+        </div>
+
+        <span
+          id="mediumCount"
+          class="stat-value"
+        >
+          -
+        </span>
+
+        <div class="stat-footer">
+          Requires review
+        </div>
+
+      </article>
+
+    </section>
+
+
+    <!-- ===================================================
+         DATA IMPORT
+         =================================================== -->
+
+    <section class="panel upload-panel">
+
+      <div class="panel-header">
+
+        <div class="panel-title-group">
+
+          <div class="panel-icon upload-icon">
+            ↑
+          </div>
+
+          <div>
+
+            <h2>
+              Import Transaction Data
+            </h2>
+
+            <p>
+              Upload your organization's transaction dataset
+              and run compliance monitoring automatically.
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <div class="panel-badge">
+          CSV IMPORT
+        </div>
+
+      </div>
+
+
+      <div class="upload-divider"></div>
+
+
+      <form
+        id="uploadForm"
+        class="upload-form"
+      >
+
+        <!-- File input -->
+
+        <label
+          class="file-picker"
+          for="csvFile"
+        >
+
+          <span class="field-label">
+            Transaction CSV
+          </span>
+
+          <div class="file-input-box">
+
+            <div class="file-icon">
+              CSV
+            </div>
+
+            <div class="file-input-content">
+
+              <strong>
+                Choose transaction file
+              </strong>
+
+              <span>
+                PaySim-compatible CSV format
+              </span>
+
+            </div>
+
+            <div class="file-browse">
+              Browse
+            </div>
+
+          </div>
+
+          <input
+            id="csvFile"
+            name="file"
+            type="file"
+            accept=".csv,text/csv"
+            required
+          >
+
+        </label>
+
+
+        <!-- Replace existing data -->
+
+        <label
+          class="checkbox-card"
+          for="replaceData"
+        >
+
+          <input
+            id="replaceData"
+            name="replace"
+            type="checkbox"
+            value="true"
+          >
+
+          <div class="checkbox-custom">
+            ✓
+          </div>
+
+          <div class="checkbox-content">
+
+            <strong>
+              Replace existing data
+            </strong>
+
+            <span>
+              Clear current transactions before import
+            </span>
+
+          </div>
+
+        </label>
+
+
+        <!-- Upload button -->
+
+        <button
+          id="uploadButton"
+          class="upload-button"
+          type="submit"
+        >
+
+          <span class="button-icon">
+            ↑
+          </span>
+
+          <span>
+            Upload &amp; Run Monitoring
+          </span>
+
+          <span class="button-arrow">
+            →
+          </span>
+
+        </button>
+
+      </form>
+
+
+      <div class="upload-info">
+
+        <div class="info-icon">
+          i
+        </div>
+
+        <div>
+
+          <strong>
+            Required columns
+          </strong>
+
+          <span>
+            step, type, amount, nameOrig, oldbalanceOrg,
+            newbalanceOrig, nameDest, oldbalanceDest,
+            newbalanceDest
+          </span>
+
+        </div>
+
+      </div>
+
+
+      <div
+        id="uploadResult"
+        class="upload-result"
+        hidden
+      ></div>
+
+    </section>
+
+
+    <!-- ===================================================
+         COMPLIANCE REPORT
+         =================================================== -->
+
+    <section class="panel report-panel">
+
+      <div class="panel-header">
+
+        <div class="panel-title-group">
+
+          <div class="panel-icon report-icon">
+            ◈
+          </div>
+
+          <div>
+
+            <h2>
+              Compliance Report
+            </h2>
+
+            <p>
+              Overview of detected risk patterns and
+              monitoring activity.
+            </p>
+
+          </div>
+
+        </div>
+
+        <div class="report-status">
+          <span class="status-dot"></span>
+          SYSTEM ACTIVE
+        </div>
+
+      </div>
+
+
+      <div class="report-grid">
+
+        <div
+          id="reportBody"
+          class="report"
+        >
+          Loading…
+        </div>
+
+      </div>
+
+
+      <div class="report-actions">
+
+        <a
+          id="csvAll"
+          class="button report-button"
+          href="/api/reports/flagged.csv"
+        >
+          <span>↓</span>
+          Download Flagged Transactions
+        </a>
+
+        <a
+          id="csvHigh"
+          class="button secondary report-button"
+          href="/api/reports/flagged.csv?risk_level=HIGH"
+        >
+          <span>⚠</span>
+          High Risk Only
+        </a>
+
+      </div>
+
+    </section>
+
+
+    <!-- ===================================================
+         TRANSACTIONS
+         =================================================== -->
+
+    <section class="panel transactions-panel">
+
+      <div class="panel-header">
+
+        <div class="panel-title-group">
+
+          <div class="panel-icon transaction-icon">
+            ≋
+          </div>
+
+          <div>
+
+            <h2>
+              Transaction Monitoring
+            </h2>
+
+            <p>
+              Review monitored transactions and detected
+              risk indicators.
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <div class="transaction-count">
+          LIVE DATA
+        </div>
+
+      </div>
+
+
+      <!-- Filters -->
+
+      <div class="filters">
+
+        <div class="filter-group">
+
+          <span class="filter-label">
+            Risk Level
+          </span>
+
+          <select id="riskFilter">
+
+            <option value="">
+              All Risk Levels
+            </option>
+
+            <option value="HIGH">
+              High Risk
+            </option>
+
+            <option value="MEDIUM">
+              Medium Risk
+            </option>
+
+            <option value="LOW">
+              Low Risk
+            </option>
+
+          </select>
+
+        </div>
+
+
+        <label
+          class="flagged-filter"
+          for="flaggedOnly"
+        >
+
+          <input
+            type="checkbox"
+            id="flaggedOnly"
+          >
+
+          <span class="filter-checkbox">
+            ✓
+          </span>
+
+          <span>
+            Flagged only
+          </span>
+
+        </label>
+
+
+        <span class="spacer"></span>
+
+
+        <div class="pagination">
+
+          <button
+            id="prevPage"
+            type="button"
+            class="page-button"
+            aria-label="Previous page"
+          >
+            ←
+          </button>
+
+          <span
+            id="pageInfo"
+            class="page-info"
+          >
+            -
+          </span>
+
+          <button
+            id="nextPage"
+            type="button"
+            class="page-button"
+            aria-label="Next page"
+          >
+            →
+          </button>
+
+        </div>
+
+      </div>
+
+
+      <!-- Table -->
+
+      <div class="table-wrap">
+
+        <table>
+
+          <thead>
+
+            <tr>
+
+              <th>ID</th>
+
+              <th>Step</th>
+
+              <th>Type</th>
+
+              <th>Amount</th>
+
+              <th>Origin Account</th>
+
+              <th>Destination</th>
+
+              <th>Risk</th>
+
+              <th>Status</th>
+
+              <th>Reason</th>
+
+            </tr>
+
+          </thead>
+
+
+          <tbody id="transactionTable"></tbody>
+
+        </table>
+
+      </div>
+
+
+      <!-- Table footer -->
+
+      <div class="table-footer">
+
+        <span>
+          Transaction monitoring powered by
+          <strong>RegTech Copilot</strong>
+        </span>
+
+        <span class="secure-indicator">
+          <span class="status-dot"></span>
+          Secure local processing
+        </span>
+
+      </div>
+
+    </section>
+
+
+  </main>
+
+
+  <!-- =====================================================
+       FOOTER
+       ===================================================== -->
+
+  <footer class="app-footer">
+
+    <div>
+      <strong>RegTech Copilot</strong>
+      <span> · Rule-Based Transaction Monitoring</span>
+    </div>
+
+    <div>
+      Flask · SQLite · REST API
+    </div>
+
+  </footer>
+
+
+  <!-- =====================================================
+       JAVASCRIPT
+       ===================================================== -->
+
+  <script
+    src="{{ url_for('static', filename='js/app.js') }}"
+  ></script>
+
+</body>
+</html>
