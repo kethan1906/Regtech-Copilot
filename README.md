@@ -56,7 +56,7 @@ The application provides a centralized compliance dashboard for monitoring trans
 
 <p align="center">
 
-<<img width="1712" height="866" alt="reg tech" src="https://github.com/user-attachments/assets/20d117c6-6f13-418a-8614-3fafd175f1a8" />
+<img width="1712" height="866" alt="reg tech" src="https://github.com/user-attachments/assets/20d117c6-6f13-418a-8614-3fafd175f1a8" />
 
 </p>
 
