@@ -1,93 +1,78 @@
-# RegTech Copilot
+# 🛡️ RegTech Copilot
 
-A small web-based transaction-monitoring system. Transactions are stored in SQLite, a rule engine flags suspicious patterns, results are exposed through a REST API, and a JavaScript dashboard shows transactions, risk levels, flagged activity and a downloadable compliance report.
+### Rule-Based Financial Transaction Monitoring & Compliance Dashboard
 
-**Stack:** Python, Flask, SQLite (SQL), REST APIs, JavaScript, HTML, CSS. There is no machine-learning or LLM component: monitoring is deliberately rule-based.
+<p align="center">
 
-## What it does
+**Detect suspicious transaction patterns • Generate risk alerts • Monitor compliance activity**
 
-Four predefined rules are evaluated for every transaction (`services/rule_engine.py`):
+</p>
 
-| Rule | Fires when |
-| --- | --- |
-| `HIGH_VALUE` | amount >= 200,000 |
-| `REPEATED_ACTIVITY` | >= 3 earlier transactions from the same origin account in the previous 24 steps |
-| `ACCOUNT_DRAINED` | a TRANSFER / CASH_OUT of >= 99% of the origin balance (and >= 10,000) |
-| `RAPID_PASS_THROUGH` | a CASH_OUT from an account that received a TRANSFER within the last 6 steps |
+<p align="center">
 
-Risk level: 0 matched rules = LOW (not flagged), 1 = MEDIUM, 2 or more = HIGH. All thresholds are in `config.py` / `.env` and are **illustrative defaults, not values tuned or validated on real data**.
+<img src="https://img.shields.io/badge/Python-3.x-blue?style=for-the-badge&logo=python" />
+<img src="https://img.shields.io/badge/Flask-Web%20App-black?style=for-the-badge&logo=flask" />
+<img src="https://img.shields.io/badge/SQLite-Database-blue?style=for-the-badge&logo=sqlite" />
+<img src="https://img.shields.io/badge/JavaScript-Frontend-yellow?style=for-the-badge&logo=javascript" />
+<img src="https://img.shields.io/badge/Tests-37%20Passing-success?style=for-the-badge" />
 
-Architecture:
+</p>
 
-```
-CSV (PaySim format) -> validation/import -> SQLite (transactions)
-SQLite --window query--> services/monitoring_service.py -> rule_engine.evaluate_transaction
-        -> alerts table (+ monitoring_runs log)
-Browser (HTML/CSS/JS) --fetch--> Flask REST API --> services/* --> SQLite
-```
+---
 
-Monitoring is a batch job (`scripts/run_monitoring.py`): one SQL pass computes each transaction's recent same-account activity with a window function, the pure-Python rule engine decides, and flagged results are stored in `alerts`. The API reads the stored results, so dashboard requests are cheap. The dashboard also provides a CSV upload workflow: choose a PaySim-format CSV, optionally replace the current dataset, and click **Upload & Run Monitoring**. The server validates the file, imports it transactionally, runs monitoring, and refreshes the dashboard. Files are limited to 50 MB. The command-line importer remains available for scripted/batch workflows.
+## 🚀 What is RegTech Copilot?
 
-## Quick start
+**RegTech Copilot** is a full-stack financial transaction monitoring application designed to identify potentially suspicious transaction patterns using a transparent, rule-based compliance engine.
 
-```bash
-python -m venv .venv && source .venv/bin/activate    # Windows: .venv\Scripts\activate
-pip install -r requirements.txt
+The system takes transaction data, stores it in SQLite, evaluates it against predefined monitoring rules, generates risk-based alerts, and presents the results through an interactive web dashboard.
 
-python -m scripts.setup_demo      # fresh DB + bundled SYNTHETIC data + monitoring
-python app.py                     # open http://127.0.0.1:5000
-pytest                            # run the test suite
-```
+Instead of treating suspicious activity as a black-box prediction, the system provides **explainable rule-triggered alerts** that show *why* a transaction was flagged.
 
-### Using your own data (e.g. PaySim)
+---
 
-```bash
-python -m scripts.init_db --reset
-python -m scripts.import_data --csv path/to/PS_20174392719_1491204439457_log.csv --monitor
+## 🎯 Key Capabilities
 
-# Replace existing data when importing
-python -m scripts.import_data --csv path/to/data.csv --monitor --replace
-```
+| Capability | Description |
+|---|---|
+| 📥 **Transaction Import** | Import structured financial transaction CSV files |
+| 🔍 **Rule-Based Monitoring** | Detect predefined suspicious transaction patterns |
+| 🚨 **Risk Alerts** | Automatically classify transactions as LOW, MEDIUM, or HIGH risk |
+| 📊 **Compliance Dashboard** | Visualize transaction and alert activity |
+| 🔌 **REST API** | Access transactions, alerts, reports, and health information |
+| 📄 **CSV Reporting** | Export flagged transactions for further analysis |
+| 🛡️ **Input Validation** | Validate uploaded transaction data |
+| 🔐 **Security Checks** | Includes SQL injection and CSV formula-injection protections |
+| 🧪 **Automated Testing** | 37 tests covering core application behavior |
 
-The CSV needs the PaySim columns `step, type, amount, nameOrig, oldbalanceOrg, newbalanceOrig, nameDest, oldbalanceDest, newbalanceDest`. PaySim's fraud labels are not used. The full PaySim file has ~6.3 million rows; importing and monitoring it is a long batch job that has **not** been benchmarked here (`--limit N` imports a subset).
+---
 
-## REST API
+# 🖥️ Dashboard
 
-| Endpoint | Description |
-| --- | --- |
-| `GET /api/transactions` | Paginated transactions with risk info. Params: `limit` (1-1000, default 100), `offset`, `risk_level` (LOW/MEDIUM/HIGH), `flagged_only` |
-| `GET /api/alerts` | Flagged transactions only (same params, no LOW) |
-| `POST /api/import` | Upload a PaySim-format CSV as multipart form field `file`; optional `replace=true` replaces existing data, then monitoring runs automatically |
-| `GET /api/reports/summary` | Totals, counts by risk level and rule, top origin accounts, last monitoring run and the rule parameters used |
-| `GET /api/reports/flagged.csv` | CSV export of flagged transactions (optional `risk_level=HIGH|MEDIUM`) |
-| `GET /api/health` | Liveness check |
+The application provides a centralized compliance dashboard for monitoring transaction activity, risk levels, alerts, and reporting.
 
-Invalid parameters return HTTP 400 with `{"error": ...}`. The CSV export neutralises spreadsheet formula injection in text cells.
+<br>
 
-## About the bundled sample data
+<<img width="1712" height="866" alt="reg tech" src="https://github.com/user-attachments/assets/20d117c6-6f13-418a-8614-3fafd175f1a8" />
 
-`data/sample_transactions.csv` is **synthetic** (generated by `scripts/generate_sample_data.py`, seed 42). It uses PaySim's column layout, contains ordinary traffic plus a few deliberately planted patterns so each rule has something to find, and has no fraud labels. Counts of flagged rows on it say nothing about real-world detection accuracy; no accuracy, precision/recall or performance figures are claimed for this project.
+<p align="center">
 
-## Tests
+**[ INSERT MAIN DASHBOARD SCREENSHOT HERE ]**
 
-`pytest` runs 41 tests: rule boundaries and risk levels, the SQL monitoring pass checked against an independent brute-force implementation, look-back window edge cases, importer validation/rollback, SQL-injection safety, every API endpoint and error path, CSV export, and empty-database behaviour. The dashboard JavaScript has no automated test in this repo.
+</p>
 
-## Limitations
+<br>
 
-- No authentication or authorisation: treat it as an internal/demo tool and do not expose it publicly.
-- SQLite and Flask's built-in server are fine for a demo or single user; use a production WSGI server and a client/server database for anything larger. Concurrent multi-user behaviour has not been tested.
-- Four simple rules produce alerts, not verdicts; thresholds need tuning against real data and domain input before any real use.
-- Transactions imported after the last monitoring run are shown as LOW until monitoring is re-run (the dashboard shows a notice).
-- No sanctions screening, geolocation checks, user accounts or LLM features.
+---
 
-## Project layout
+# ⚡ Start Demo
 
-```
-app.py  config.py  requirements.txt  .env.example
-database/    schema.sql, db.py
-services/    rule_engine.py, monitoring_service.py, transaction_service.py, report_service.py
-scripts/     init_db, import_data, run_monitoring, setup_demo, generate_sample_data
-templates/ static/    dashboard (HTML/CSS/JS)
-data/        sample_transactions.csv (synthetic)
-tests/
-```
+## ▶ One-Click Demo
+
+The repository includes a simple Windows launcher.
+
+After downloading or cloning the project:
+
+### 1. Install dependencies
+
+```powershell
+py -m pip install -r requirements.txt
